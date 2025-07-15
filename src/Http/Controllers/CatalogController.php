@@ -136,7 +136,7 @@ class CatalogController extends BaseController
                 }
 
             case $this->stepInfo:
-                return $this->answer($this->getInfoModel()->info());
+                return $this->getInfoModel()->info();
 
             case $this->stepDeactivate:
                 $startTime = $this->getStartTime();
