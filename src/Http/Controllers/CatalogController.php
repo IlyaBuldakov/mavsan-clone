@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Mavsan\LaProtocol\Http\Controllers;
 
+use App;
 use Auth;
 use Exception;
 use File;
@@ -19,7 +20,6 @@ use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Mavsan\LaProtocol\Http\Controllers\Traits\ImportsCatalog;
 use Mavsan\LaProtocol\Http\Controllers\Traits\SharesSale;
-use Mavsan\LaProtocol\Interfaces\Import;
 use Mavsan\LaProtocol\Interfaces\Info;
 use Mavsan\LaProtocol\Model\FileName;
 use Session;
