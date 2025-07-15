@@ -25,16 +25,16 @@ trait ImportsCatalog
         $modelCLass = config('protocolExchange1C.catalogWorkModel');
         // проверка модели
         if (empty($modelCLass)) {
-            return $this->failure('Mode: '.$this->stepImport
-                                  .', please set model to import data in catalogWorkModel key.');
+            return $this->failure('Mode: ' . $this->stepImport
+                . ', please set model to import data in catalogWorkModel key.');
         }
 
         /** @var Import $model */
         $model = App::make($modelCLass);
-        if (! $model instanceof Import) {
-            return $this->failure('Mode: '.$this->stepImport.' model '
-                                  .$modelCLass
-                                  .' must implement \Mavsan\LaProtocol\Interfaces\Import');
+        if (!$model instanceof Import) {
+            return $this->failure('Mode: ' . $this->stepImport . ' model '
+                . $modelCLass
+                . ' must implement \Mavsan\LaProtocol\Interfaces\Import');
         }
 
         return $model;
@@ -51,49 +51,49 @@ trait ImportsCatalog
 
         if ($unZip == 'more') {
             return $this->answer('progress');
-        } elseif (! empty($unZip)) {
-            return $this->failure('Mode: '.$this->stepImport.' '.$unZip);
+        } elseif (!empty($unZip)) {
+            return $this->failure('Mode: ' . $this->stepImport . ' ' . $unZip);
         }
 
         // проверка валидности имени файла
         $fileName =
             $this->importGetFileName($this->request->get('filename'));
         if (empty($fileName)) {
-            return $this->failure('Mode: '.$this->stepImport
-                                  .' wrong file name: '
-                                  .$this->request->get('filename'));
+            return $this->failure('Mode: ' . $this->stepImport
+                . ' wrong file name: '
+                . $this->request->get('filename'));
         }
 
         /** @var Import $model */
         $model = $this->getImportModel();
-        if (! $model instanceof Import) {
+        if (!$model instanceof Import) {
             return $model;
         }
 
         try {
             $fullPath = $this->getFullPathToFile($fileName);
 
-            if (! File::isFile($fullPath)) {
-                return $this->failure('Mode: '.$this->stepImport.', file '
-                                      .$fullPath
-                                      .' not exists');
+            if (!File::isFile($fullPath)) {
+                return $this->failure('Mode: ' . $this->stepImport . ', file '
+                    . $fullPath
+                    . ' not exists');
             }
 
             $ret = $model->import($fullPath);
 
             return $this->importAnalyzeModelAnswer($ret, $model);
         } catch (Exception $e) {
-            return $this->failure('Mode: '.$this->stepImport
-                                  .", exception: {$e->getMessage()}\n"
-                                  ."{$e->getFile()}, {$e->getLine()}\n"
-                                  ."{$e->getTraceAsString()}");
+            return $this->failure('Mode: ' . $this->stepImport
+                . ", exception: {$e->getMessage()}\n"
+                . "{$e->getFile()}, {$e->getLine()}\n"
+                . "{$e->getTraceAsString()}");
         }
     }
 
     /**
      * Анализ ответа от модели обработки каталога товаров
      *
-     * @param string                               $result
+     * @param string $result
      * @param \Mavsan\LaProtocol\Interfaces\Import $model
      *
      * @return string
@@ -107,15 +107,15 @@ trait ImportsCatalog
             Import::answerFailure,
         ];
 
-        if (! in_array($retData[0], $valid)) {
-            return $this->failure('Mode: '.$this->stepImport.' model '
-                                  .class_basename($model)
-                                  .' model return wrong answer');
+        if (!in_array($retData[0], $valid)) {
+            return $this->failure('Mode: ' . $this->stepImport . ' model '
+                . class_basename($model)
+                . ' model return wrong answer');
         }
 
         $log = $model->getAnswerDetail();
 
-        return $this->answer($result."\n".$log);
+        return $this->answer($result . "\n" . $log);
     }
 
     /**
@@ -137,10 +137,10 @@ trait ImportsCatalog
 
             return $model::answerSuccess;
         } catch (Exception $e) {
-            return $this->failure('Mode: '.$this->stepImport
-                                  .", exception: {$e->getMessage()}\n"
-                                  ."{$e->getFile()}, {$e->getLine()}\n"
-                                  ."{$e->getTraceAsString()}");
+            return $this->failure('Mode: ' . $this->stepImport
+                . ", exception: {$e->getMessage()}\n"
+                . "{$e->getFile()}, {$e->getLine()}\n"
+                . "{$e->getTraceAsString()}");
         }
     }
 
@@ -161,10 +161,10 @@ trait ImportsCatalog
 
             return $model::answerSuccess;
         } catch (Exception $e) {
-            return $this->failure('Mode: '.$this->stepImport
-                                  .", exception: {$e->getMessage()}\n"
-                                  ."{$e->getFile()}, {$e->getLine()}\n"
-                                  ."{$e->getTraceAsString()}");
+            return $this->failure('Mode: ' . $this->stepImport
+                . ", exception: {$e->getMessage()}\n"
+                . "{$e->getFile()}, {$e->getLine()}\n"
+                . "{$e->getTraceAsString()}");
         }
     }
 
@@ -190,14 +190,14 @@ trait ImportsCatalog
             $zip = new ZipArchive();
 
             if ($zip->open($file) !== true) {
-                return 'Error opening zipped: '.$file;
+                return 'Error opening zipped: ' . $file;
             }
         } catch (Exception $e) {
-            return 'Error opening zipped: '.$e->getMessage();
+            return 'Error opening zipped: ' . $e->getMessage();
         }
 
         $path =
-            config('protocolExchange1C.inputPath').'/'.$this->checkInputPath();
+            config('protocolExchange1C.inputPath') . '/' . $this->checkInputPath();
 
         $zip->extractTo($path);
         $zip->close();
@@ -223,7 +223,7 @@ trait ImportsCatalog
         $modeFileName = new FileName($fileName);
         if ($modeFileName->hasScriptExtension()
             || $modeFileName->isFileUnsafe()
-            || ! $modeFileName->validatePathString("/$fileName")
+            || !$modeFileName->validatePathString("/$fileName")
         ) {
             return '';
         }

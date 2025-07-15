@@ -19,6 +19,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Mavsan\LaProtocol\Http\Controllers\Traits\ImportsCatalog;
 use Mavsan\LaProtocol\Http\Controllers\Traits\SharesSale;
+use Mavsan\LaProtocol\Interfaces\Import;
+use Mavsan\LaProtocol\Interfaces\Info;
 use Mavsan\LaProtocol\Model\FileName;
 use Session;
 
@@ -30,6 +32,7 @@ class CatalogController extends BaseController
 
     protected string $stepFile = 'file';
     protected string $stepImport = 'import';
+    protected string $stepInfo = 'info';
     protected string $stepDeactivate = 'deactivate';
     protected string $stepComplete = 'complete';
 
@@ -131,6 +134,9 @@ class CatalogController extends BaseController
                 } catch (Exception $e) {
                     return $this->failure($e->getMessage());
                 }
+
+            case $this->stepInfo:
+                return $this->getInfoModel()->info();
 
             case $this->stepDeactivate:
                 $startTime = $this->getStartTime();
@@ -459,5 +465,25 @@ class CatalogController extends BaseController
     protected function success()
     {
         return $this->answer('success');
+    }
+
+    protected function getInfoModel()
+    {
+        $modelCLass = config('protocolExchange1C.infoModel');
+        // проверка модели
+        if (empty($modelCLass)) {
+            return $this->failure('Mode: '.$this->stepInfo
+                .', please set model to import data in infoModel key.');
+        }
+
+        /** @var Info $model */
+        $model = App::make($modelCLass);
+        if (! $model instanceof Info) {
+            return $this->failure('Mode: '.$this->stepInfo.' model '
+                .$modelCLass
+                .' must implement \Mavsan\LaProtocol\Interfaces\Info');
+        }
+
+        return $model;
     }
 }
