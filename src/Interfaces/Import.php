@@ -30,11 +30,12 @@ interface Import
      * 1000000', разделитель строк - символ переноса строки \n
      *
      * @param string $fileName полный путь к обрабатываемому файлу
+     * @param string $importFilesDirectory полный путь к медиа файлам 1С (import_files)
      *
      * @return string success или progress, если какая-то ошибка - failure,
      *                далее /n и описание
      */
-    public function import($fileName): string;
+    public function import($fileName, $importFilesDirectory): string;
 
     /**
      * Метод возвращает развернутый ответ статуса, или пустую строку. Необходим,

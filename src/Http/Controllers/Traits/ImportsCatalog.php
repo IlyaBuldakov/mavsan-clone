@@ -71,15 +71,16 @@ trait ImportsCatalog
         }
 
         try {
-            $fullPath = $this->getFullPathToFile($fileName);
+            $fullFilePath = $this->getFullPathToFile($fileName);
+            $fullMediaPath = $this->getFullPathToFile('import_files');
 
-            if (! File::isFile($fullPath)) {
+            if (! File::isFile($fullFilePath)) {
                 return $this->failure('Mode: '.$this->stepImport.', file '
-                    .$fullPath
+                    .$fullFilePath
                     .' not exists');
             }
 
-            $ret = $model->import($fullPath);
+            $ret = $model->import($fullFilePath, $fullMediaPath);
 
             return $this->importAnalyzeModelAnswer($ret, $model);
         } catch (Exception $e) {
