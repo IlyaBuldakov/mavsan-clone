@@ -9,6 +9,7 @@
 namespace Mavsan\LaProtocol\Http\Controllers\Traits;
 
 use App;
+use Log;
 use Exception;
 use File;
 use Mavsan\LaProtocol\Interfaces\Import;
@@ -200,6 +201,9 @@ trait ImportsCatalog
             config('protocolExchange1C.inputPath').'/'.$this->checkInputPath();
 
         $zip->extractTo($path);
+
+        Log::info('Разархивировано: ', scandir($path));
+
         $zip->close();
 
         File::delete($file);
